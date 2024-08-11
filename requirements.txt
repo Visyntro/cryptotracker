@@ -1,0 +1,12 @@
+pandas==*
+numpy<2
+newsapi-python==*
+requests==*
+transformers==*
+torch==*
+groq==*
+langchain-groq==*
+langchain==*
+langchain-core==*
+streamlit==*
+tensorflow==*
