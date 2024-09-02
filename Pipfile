@@ -18,6 +18,7 @@ streamlit = "*"
 tensorflow = "*"
 eventregistry = "*"
 ccxt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

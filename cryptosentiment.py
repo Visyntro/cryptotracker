@@ -4,7 +4,10 @@ import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 """This one is using the groq libary directly"""
+import dotenv
+dotenv.load_dotenv()
 
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 from langchain_core.pydantic_v1 import BaseModel, Field
 from typing import Optional
 from typing_extensions import Annotated, TypedDict
@@ -70,7 +73,7 @@ from langchain_groq import ChatGroq
 
 from typing import List, Tuple
 def crypto_categorizer(text: str) -> List[dict]:
-    llm = ChatGroq(groq_api_key = "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",model="llama3-8b-8192")
+    llm = ChatGroq(groq_api_key = GROQ_API_KEY,model="llama3-8b-8192")
     #chain = LLMChain(prompt=prompt, llm=llm)
     chain = prompt | llm | parser
     result = chain.invoke({"text":text,"top_cryptos":top_cryptos})
@@ -169,10 +172,16 @@ Please format the output in **Markdown** as follows:
   
  
   
-  llm = ChatGroq(groq_api_key = "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", model="llama3-8b-8192")
+  llm = ChatGroq(groq_api_key = GROQ_API_KEY , model="llama3-8b-8192")
   chain = prompt | llm | parser 
   result = chain.invoke({"news_articles":news_articles,"sentiment":sentiment,"bruh":bruh,"cryptos":cryptos})
 
   return result
+
+
+
+
+
+
   
 
