@@ -1,4 +1,4 @@
-import requests
+'''import requests
 import pandas as pd
 from datetime import datetime, timedelta
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     # Display first few rows
     print(df.head())
 
-
+'''
 
 """## Key Points to notice
 
@@ -76,34 +76,114 @@ Running Cryptobert on these datasets
 """
 
 
-for text in df['text']:
-  result = classifier(text)
-  print(result)
-
 """Now Getting News using News API"""
 
 
+import pandas as pd
 
-from newsapi import NewsApiClient
-
-# Init
-newsapi = NewsApiClient(api_key='4670c278aa53490b99c29e290984acd4')
-# /v2/everything
-all_articles = newsapi.get_everything(q='bitcoin OR ethereum',
-                                      sources='bbc-news,the-verge',
-                                      domains='bbc.co.uk,techcrunch.com',
-                                      from_param= datetime.now()-timedelta(days=10),
-                                      to=datetime.now(),
-                                      language='en',
-                                      sort_by='relevancy',
-                                      page=2)
+from eventregistry import *
+# since we want results from last month, just prevent use of archive - in this way we don't need to set any date constraints
+er = EventRegistry(apiKey = "07e1dd4f-d804-45f5-9531-56a26fc9381b", allowUseOfArchive = False)
 
 
-all_articles
+query = {
+    "$query": {
+          "$or": [
+                        {"keyword": "Memecoins", "keywordLoc": "body"},
+                        {"keyword": "Cryptocurrency", "keywordLoc": "body"},
+                        {"keyword": "Bitcoin", "keywordLoc": "body"},
+                        {"keyword": "Ethereum", "keywordLoc": "body"},
+                        {"keyword": "Cryptocurrency_wallet", "keywordLoc": "body"},
+                        {"keyword": "Blockchain", "keywordLoc": "body"},
+                        {"keyword": "Altcoins", "keywordLoc": "body"},
+                        {"keyword": "Web3", "keywordLoc": "body"},
+                        {"keyword": "Metaverse", "keywordLoc": "body"},
+                        {"keyword": "DAO", "keywordLoc": "body"},
+                        {"keyword": "Cryptocurrency exchange", "keywordLoc": "body"},
+                    
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Bitcoin"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Ethereum"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_wallet"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Blockchain"
+            },
+            {
+              "conceptUri": "http://pt.wikipedia.org/wiki/Altcoins"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Web3"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Metaverse"
+            },
+            {
+              "conceptUri": "http://es.wikipedia.org/wiki/DAO"
+            },
+            {
+              "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_exchange"
+            },
+                  {
+        "$or": [
+          {
+            "locationUri": "http://en.wikipedia.org/wiki/India"
+          },
+          {
+            "locationUri": "http://en.wikipedia.org/wiki/United_States"
+          },
+          {
+            "locationUri": "http://en.wikipedia.org/wiki/Europe"
+          }
+        ]
+      },
+            {
+              "lang": "eng"
+            }
+          ]
+        },
+    "$filter": {
+      "forceMaxDataTimeWindow": "31"
+    }
+    
+  }
+q = QueryArticlesIter.initWithComplexQuery(query)
+# change maxItems to get the number of results that you want
+articles = []
 
-bruh= requests.get(f"https://newsapi.org/v2/everything?q=cryptocurrency OR bitcoin OR ethereum OR blockchain&from={datetime.now()-timedelta(days=10)}&to={datetime.now}&sortBy=popularity&language=en&apiKey=4670c278aa53490b99c29e290984acd4")
+# change maxItems to get the number of results that you want
+for article in q.execQuery(er, maxItems=10):
+    articles.append({
+        "title": article.get("title"),
+        "url": article.get("url"),
+        "date": article.get("date"),
+        "source": article.get("source", {}).get("title"),
+        "body": article.get("body"),
+        "image": article.get("image", {}),
+        "sentiment": article.get("sentiment", {})
+    })
 
-bruh.json()
+# Convert the list of dictionaries into a DataFrame
+df_news = pd.DataFrame(articles)
 
-df_news = pd.json_normalize(bruh.json()['articles'])
-df_news.to_csv('cryptocurrency_news.csv', index=False)
+# Display the DataFrame
+print(df_news)
+
+df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
+
+
+# alternatively, the same query using the query language could look something like this:
+
+                
+
+#bruh.json()
+
+'''df_news = pd.json_normalize(bruh.json()['articles'])
+df_news.to_csv('cryptocurrency_news.csv', index=False)'''

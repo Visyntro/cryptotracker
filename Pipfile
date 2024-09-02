@@ -16,6 +16,8 @@ langchain = "*"
 langchain-core = "*"
 streamlit = "*"
 tensorflow = "*"
+eventregistry = "*"
+ccxt = "*"
 
 [dev-packages]
 

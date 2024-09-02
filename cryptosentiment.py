@@ -1,13 +1,15 @@
-import streamlit as st
+
 import os
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 """This one is using the groq libary directly"""
 
-from groq import Groq
+from langchain_core.pydantic_v1 import BaseModel, Field
+from typing import Optional
+from typing_extensions import Annotated, TypedDict
 from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+#from langchain.chains import LLMChain
 
 from langchain_core.output_parsers import StrOutputParser
 
@@ -68,7 +70,7 @@ from langchain_groq import ChatGroq
 
 from typing import List, Tuple
 def crypto_categorizer(text: str) -> List[dict]:
-    llm = ChatGroq(groq_api_key=st.secrets["groq_api_key"],model="llama3-8b-8192")
+    llm = ChatGroq(groq_api_key = "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",model="llama3-8b-8192")
     #chain = LLMChain(prompt=prompt, llm=llm)
     chain = prompt | llm | parser
     result = chain.invoke({"text":text,"top_cryptos":top_cryptos})
@@ -79,50 +81,98 @@ def crypto_categorizer(text: str) -> List[dict]:
 Prompt Template
 """
 
-def get_sentiment(news_articles):
+def get_sentiment(news_articles,sentiment):
+  
+  cryptos=crypto_categorizer(news_articles)
+  for crypto in cryptos:
+    if crypto['category']=="crypto":
+      cryptos=",".join(crypto['name'])
+      break
   """
   Given the news article, returns the Sentiment Analysis Score on the Text """
 # Load model directly
-  from transformers import AutoTokenizer, AutoModelForSequenceClassification
+  '''from transformers import AutoTokenizer, AutoModelForSequenceClassification
   from transformers import pipeline
   tokenizer = AutoTokenizer.from_pretrained("kk08/CryptoBERT")
   model = AutoModelForSequenceClassification.from_pretrained("kk08/CryptoBERT")
 
   classifier = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
-  classy=classifier(news_articles)
-  if classy[0]['label']=="LABEL_1":
-    sentiment="Positive"
+  classy=classifier(news_articles)'''
+  bruh=""
+  if float(sentiment)>0:
+    bruh="Positive"
   else:
-    sentiment="Negative"
-  bruh= classy[0]['score']
+    bruh="Negative"
   prompt = PromptTemplate(
-    input_variables=["news_articles","sentiment","bruh"],
+    input_variables=["news_articles","sentiment","bruh","cryptos"],
     template="""
 
-        You are an expert in Cryptocurrency and have tons of experience in the analysis and speculations in the crypto market. You are given the follwing news article:
-        {news_articles}
+You are an expert in Cryptocurrency and Market Analysis with extensive experience in analyzing and speculating on the crypto market. Given the following news article:
 
-        We are getting the following sentiment from this article:
-        {sentiment} with {bruh} confidence.
+```plaintext
+{news_articles}
+```
 
-        In your expert knowledge in this field, explain why there could be this given sentiment:
+**Market Sentiment:**
+
+```plaintext
+Sentiment: {bruh}
+Confidence: {sentiment}%
+```
+
+**Task:**
+
+Write the following strictly in **Markdown** format:
+
+1. Provide a detailed analysis of how this news and its sentiment will impact the performance of the associated cryptocurrencies \n {cryptos} \n Include specific predictions for the short-term (next few days), mid-term (next few weeks), and long-term (next few months) market movements.
+
+2. If the news is about the general cryptocurrency market, analyze how it might change public and market opinion, affecting overall market trends and specific sectors within the market, also considering its sentiment.
+
+3. Take into account, if applicable, the political, economic, and social factors that could influence the market based on this news article and its associated sentiment.
+
+**Output:**
+
+Please format the output in **Markdown** as follows:
+
+```markdown
+### Impact Analysis
+
+#### Short Term
+- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the short term.*
+
+#### Mid Term
+- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the mid term.*
+
+#### Long Term
+- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the long term.*
+
+### Market Opinion Change
+
+#### Public Opinion
+- *Explanation of how public opinion might shift based on the news.*
+
+#### Market Trends
+- *Analysis of how market trends might change as a result of the news.*
+
+### Additional Factors
+
+- **Political Factors:** *Consideration of political elements that could impact the market.*
+- **Economic Factors:** *Analysis of economic conditions influenced by the news.*
+- **Social Factors:** *Social dynamics that might affect the cryptocurrency market based on the news.*
+```
+
+**Only provide the Markdown output. Do not include any additional information or text.**
+
+
     """
 )
-  llm = ChatGroq(groq_api_key = st.secrets["groq_api_key"], model="llama3-8b-8192")
-  chain = prompt | llm | parser
-  result = chain.invoke({"news_articles":news_articles,"sentiment":sentiment,"bruh":bruh})
+  
+ 
+  
+  llm = ChatGroq(groq_api_key = "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", model="llama3-8b-8192")
+  chain = prompt | llm | parser 
+  result = chain.invoke({"news_articles":news_articles[:5000],"sentiment":sentiment,"bruh":bruh,"cryptos":cryptos})
 
+  return result
+  
 
-  return f"{sentiment} {classy[0]['score']} \n Here is why: \n {result}"
-
-text = "The cryptocurrency market is no stranger to fleeting trends, and the recent surge and subsequent crash of immutable x … Continu"
-categories = crypto_categorizer(text)
-for category in categories:
-    print(f"{category['name']} - {category['category']}")
-
-"""Explaining the Sentiment using Groq."""
-
-query = """
-The cryptocurrency market is no stranger to fleeting trends, and the recent surge and subsequent crash of immutable x … Continu"""
-
-print(get_sentiment(query))

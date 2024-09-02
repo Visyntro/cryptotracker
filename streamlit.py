@@ -5,7 +5,7 @@ from cryptosentiment import crypto_categorizer, get_sentiment
 # Load the news CSV file
 @st.cache_data
 def load_news_data():
-    return pd.read_csv("cryptocurrency_news.csv")
+    return pd.read_csv("cryptocurrency_newsapi.csv")
 
 def safe_lower(value):
     """Convert value to lowercase string if possible, otherwise return empty string."""
@@ -36,24 +36,26 @@ def main():
             with col1:
                 if st.button(f"📰 {row.get('title', 'Untitled')}", key=f"news_{index}"):
                     with st.expander("Article Details", expanded=True):
-                        st.write(f"**Source:** {row.get('source.name', 'Unknown')}")
-                        st.write(f"**Published:** {row.get('publishedAt', 'Unknown')}")
+                        st.write(f"**Source:** {row.get('source', 'Unknown')}")
+                        st.write(f"**Published:** {row.get('date', 'Unknown')}")
                         st.write(f"**Description:** {row.get('description', 'No description available')}")
                         
                         # Sentiment analysis
-                        content = str(row.get('title', ''))
-                        sentiment_result = get_sentiment(content)
+                        sentiment = str(row.get('sentiment', ''))
+                        content=str(row.get('body', ''))
+                        sentiment_result = get_sentiment(content, sentiment)
                         st.write("**Sentiment Analysis:**")
                         st.write(sentiment_result)
                         
                         # Cryptocurrency categorization
+                        
                         categories = crypto_categorizer(content)
                         st.write("**Cryptocurrencies mentioned:**")
                         for category in categories:
                             st.write(f"- {category['name']} ({category['category']})")
             
             with col2:
-                image_url = row.get('urlToImage')
+                image_url = row.get('image')
                 if image_url and isinstance(image_url, str):
                     st.image(image_url, use_column_width=True)
             
