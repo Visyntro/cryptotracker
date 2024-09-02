@@ -43,6 +43,8 @@ def main():
                         # Sentiment analysis
                         sentiment = str(row.get('sentiment', ''))
                         content=str(row.get('body', ''))
+                        if len(content) > 20000:
+                            content = content[:20000] + "..."
                         sentiment_result = get_sentiment(content, sentiment)
                         st.write("**Sentiment Analysis:**")
                         st.write(sentiment_result)

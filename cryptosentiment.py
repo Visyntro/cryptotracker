@@ -171,7 +171,7 @@ Please format the output in **Markdown** as follows:
   
   llm = ChatGroq(groq_api_key = "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", model="llama3-8b-8192")
   chain = prompt | llm | parser 
-  result = chain.invoke({"news_articles":news_articles[:5000],"sentiment":sentiment,"bruh":bruh,"cryptos":cryptos})
+  result = chain.invoke({"news_articles":news_articles,"sentiment":sentiment,"bruh":bruh,"cryptos":cryptos})
 
   return result
   
