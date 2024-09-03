@@ -125,7 +125,7 @@ Confidence: {sentiment}%
 
 **Task:**
 
-Write the following strictly in **Markdown** format:
+Write the following strictly in **Markdown** format: \n
 
 1. Provide a detailed analysis of how this news and its sentiment will impact the performance of the associated cryptocurrencies \n {cryptos} \n Include specific predictions for the short-term (next few days), mid-term (next few weeks), and long-term (next few months) market movements.
 
