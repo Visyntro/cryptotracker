@@ -6,6 +6,7 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 """This one is using the groq libary directly"""
 import dotenv
 dotenv.load_dotenv()
+import json
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -85,7 +86,11 @@ Prompt Template
 """
 
 def get_sentiment(news_articles,sentiment):
+
+  with open('coinmarketpruned.json') as f:
+    data = json.load(f)
   
+
   cryptos=crypto_categorizer(news_articles)
   for crypto in cryptos:
     if crypto['category']=="crypto":
@@ -107,76 +112,124 @@ def get_sentiment(news_articles,sentiment):
   else:
     bruh="Negative"
   prompt = PromptTemplate(
-    input_variables=["news_articles","sentiment","bruh","cryptos"],
+    input_variables=["news_articles","sentiment","bruh","cryptos","cryptolist"],
     template="""
+    
+    You are Crypto Statistician and Market Analysis with extensive experience in providing real statistics on the crypto market. Given the following news article:
 
-You are an expert in Cryptocurrency and Market Analysis with extensive experience in analyzing and speculating on the crypto market. Given the following news article:
+  
 
 ```plaintext
+
 {news_articles}
+
 ```
+
+  
 
 **Market Sentiment:**
 
+  
+
 ```plaintext
+
 Sentiment: {bruh}
+
 Confidence: {sentiment}%
+
 ```
+
+  
+
+**Live Cryptocurrency Tracker:**
+Refer to the Live Cryotocurrency Tracker for the list of cryptocurrencies: 
+{cryptolist}
+  
+  
+  
 
 **Task:**
 
+  
+
 Write the following strictly in **Markdown** format:
 
-1. Provide a detailed analysis of how this news and its sentiment will impact the performance of the associated cryptocurrencies \n {cryptos} \n Include specific predictions for the short-term (next few days), mid-term (next few weeks), and long-term (next few months) market movements.
-
-2. If the news is about the general cryptocurrency market, analyze how it might change public and market opinion, affecting overall market trends and specific sectors within the market, also considering its sentiment.
-
-3. Take into account, if applicable, the political, economic, and social factors that could influence the market based on this news article and its associated sentiment.
+  
+Write the biggest Gainers and Losers from this news article with their projected percent change and their projected market cap.
 
 **Output:**
 
+  
+
 Please format the output in **Markdown** as follows:
 
+  
+
 ```markdown
+
 ### Impact Analysis
 
+  
+  
+
 #### Short Term
-- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the short term.*
+
+- Predictions: *The biggest Gainers and Losers related to this news with their Price, Percent Change and Projected Market Cap.*
+
+  
 
 #### Mid Term
-- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the mid term.*
+
+- Predictions: *Details on how the news will affect specific cryptocurrencies and their trajectory or the general market in the mid term.*
+
+  
 
 #### Long Term
+
 - Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the long term.*
+
+  
 
 ### Market Opinion Change
 
+  
+
 #### Public Opinion
+
 - *Explanation of how public opinion might shift based on the news.*
 
+  
+
 #### Market Trends
+
 - *Analysis of how market trends might change as a result of the news.*
+
+  
 
 ### Additional Factors
 
+  
+
 - **Political Factors:** *Consideration of political elements that could impact the market.*
+
 - **Economic Factors:** *Analysis of economic conditions influenced by the news.*
+
 - **Social Factors:** *Social dynamics that might affect the cryptocurrency market based on the news.*
+
 ```
 
-**Only provide the Markdown output. Do not include any additional information or text.**
+  
 
-
-    """
+**Only provide the Markdown output. Do not include any additional information or text.**"""
 )
   
  
   
   llm = ChatGroq(groq_api_key = GROQ_API_KEY , model="llama3-8b-8192")
   chain = prompt | llm | parser 
-  result = chain.invoke({"news_articles":news_articles,"sentiment":sentiment,"bruh":bruh,"cryptos":cryptos})
+  result = chain.invoke({"news_articles":news_articles,"sentiment":sentiment,"bruh":bruh,"cryptos":cryptos,"cryptolist":data})
 
-  return result
+  return sentiment+ " " +bruh+ "\n"+ result
 
 
 

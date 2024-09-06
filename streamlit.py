@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from cryptosentiment import crypto_categorizer, get_sentiment
+from summarizer import summarize_news_article
 
 # Load the news CSV file
 @st.cache_data
@@ -38,14 +39,15 @@ def main():
                     with st.expander("Article Details", expanded=True):
                         st.write(f"**Source:** {row.get('source', 'Unknown')}")
                         st.write(f"**Published:** {row.get('date', 'Unknown')}")
-                        st.write(f"**Description:** {row.get('description', 'No description available')}")
+                        st.write(f"**Link:** {row.get('url', 'No description available')}")
                         
                         # Sentiment analysis
                         sentiment = str(row.get('sentiment', ''))
                         content=str(row.get('body', ''))
                         if len(content) > 20000:
                             content = content[:20000] + "..."
-                        sentiment_result = get_sentiment(content, sentiment)
+                        summarized_content = summarize_news_article(content)
+                        sentiment_result = get_sentiment(summarized_content, sentiment)
                         st.write("**Sentiment Analysis:**")
                         st.write(sentiment_result)
                         
