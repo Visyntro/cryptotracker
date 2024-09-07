@@ -176,7 +176,7 @@ df_news = pd.DataFrame(articles)
 # Display the DataFrame
 print(df_news)
 
-df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
+df_news.to_csv('C:\\Users\\utfu\\Desktop\\cryptotracker\\test\\cryptotracker\\cryptocurrency_newsapi.csv', index=False)
 
 
 # alternatively, the same query using the query language could look something like this:
