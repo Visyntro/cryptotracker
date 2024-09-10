@@ -1,7 +1,8 @@
 import ccxt
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
+import os
 
 def fetch_historical_data(exchange, symbol, timeframe='1d', limit=7):
     try:
@@ -19,8 +20,10 @@ exchange = ccxt.binance()
 # List of cryptocurrencies
 cryptocurrencies = ['BTC', 'ETH', 'USDT', 'BNB', 'SOL', 'USDC', 'XRP', 'DOGE', 'TRX', 'TON', 'ADA', 'AVAX', 'SHIB', 'LINK', 'BCH', 'DOT', 'LEO', 'DAI', 'LTC', 'NEAR', 'UNI', 'KAS', 'ICP', 'XMR', 'PEPE', 'APT', 'FET', 'XLM', 'ETC', 'FDUSD', 'OKB', 'SUI', 'STX', 'CRO', 'AAVE', 'FIL', 'RENDER', 'IMX', 'MNT', 'TAO', 'MATIC', 'HBAR', 'ARB', 'VET', 'INJ', 'OP', 'ATOM', 'WIF', 'MKR', 'AR']
 
-# Dictionary to store results
-results = {}
+# Folder to store the CSV files
+folder_name = 'crypto_data'
+if not os.path.exists(folder_name):
+    os.makedirs(folder_name)  # Create the folder if it doesn't exist
 
 # Fetch data for each cryptocurrency
 for crypto in cryptocurrencies:
@@ -28,21 +31,19 @@ for crypto in cryptocurrencies:
     
     # Convert crypto name to symbol (this might need adjustment for some cryptocurrencies)
     symbol = f"{crypto}/USDT"
+    if crypto == 'USDT':
+        symbol = 'USDT/USD'
     
     # Fetch historical data
     df = fetch_historical_data(exchange, symbol)
     
     if df is not None:
-        results[crypto] = df
+        # Save the DataFrame as a CSV file in the designated folder
+        csv_filename = os.path.join(folder_name, f"{crypto}_ohlcv.csv")
+        df.to_csv(csv_filename, index=False)
+        print(f"Saved {crypto} data to {csv_filename}")
     
     # Add a delay to avoid hitting rate limits
     time.sleep(1)
 
-# Print results
-for crypto, df in results.items():
-    print(f"\nHistorical data for {crypto}:")
-    print(df)
-
-# You can also save the results to CSV files if needed
-# for crypto, df in results.items():
-#     df.to_csv(f"{crypto}_historical_data.csv", index=False)
+print("All data saved successfully.")

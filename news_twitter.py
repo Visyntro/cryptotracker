@@ -80,10 +80,14 @@ Running Cryptobert on these datasets
 
 
 import pandas as pd
+import dotenv 
+import os
+dotenv.load_dotenv()
+eventkey = os.getenv('eventkey')
 
 from eventregistry import *
 # since we want results from last month, just prevent use of archive - in this way we don't need to set any date constraints
-er = EventRegistry(apiKey = "07e1dd4f-d804-45f5-9531-56a26fc9381b", allowUseOfArchive = False)
+er = EventRegistry(apiKey = eventkey , allowUseOfArchive = False)
 
 
 query = {
