@@ -56,7 +56,7 @@ def main():
                         categories = crypto_categorizer(content)
                         st.write("**Cryptocurrencies mentioned:**")
                         for category in categories:
-                            st.write(f"- {category['name']} ({category['category']})")
+                            st.write("- " + category)
             
             with col2:
                 image_url = row.get('image')
