@@ -19,6 +19,9 @@ tensorflow = "*"
 eventregistry = "*"
 ccxt = "*"
 python-dotenv = "*"
+tabulate = "*"
+matplotlib = "*"
+plotly = "*"
 
 [dev-packages]
 

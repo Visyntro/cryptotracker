@@ -47,13 +47,12 @@ def main():
                         if len(content) > 20000:
                             content = content[:20000] + "..."
                         summarized_content = summarize_news_article(content)
-                        sentiment_result = get_sentiment(summarized_content, sentiment)
-                        st.write("**Sentiment Analysis:**")
-                        st.write(sentiment_result)
+                        categories = crypto_categorizer(content)
+                        get_sentiment(summarized_content, sentiment,categories)
                         
                         # Cryptocurrency categorization
                         
-                        categories = crypto_categorizer(content)
+                        
                         st.write("**Cryptocurrencies mentioned:**")
                         for category in categories:
                             st.write("- " + category)
