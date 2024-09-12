@@ -189,18 +189,18 @@ Please format the output in **Markdown** as follows:
 #### Short Term
 
 
-- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the short term and the trajectory of the numbers* Crypto List **DO NOT PRINT THIS BY ANY MEANS**: {cryptolist}
+- Predictions: *In concise points, Details on how the news will affect specific cryptocurrencies or the general market in the short term and the trajectory of the numbers* Crypto List **DO NOT PRINT THIS BY ANY MEANS**: {cryptolist}
   
 
 #### Mid Term
 
-- Predictions: *Details on how the news will affect specific cryptocurrencies and their trajectory or the general market in the mid term.*
+- Predictions: *In concise points, Details on how the news will affect specific cryptocurrencies and their trajectory or the general market in the mid term.*
 
   
 
 #### Long Term
 
-- Predictions: *Details on how the news will affect specific cryptocurrencies or the general market in the long term.*
+- Predictions: *In concise points, Details on how the news will affect specific cryptocurrencies or the general market in the long term.*
 
   
 
@@ -210,13 +210,13 @@ Please format the output in **Markdown** as follows:
 
 #### Public Opinion
 
-- *Explanation of how public opinion might shift based on the news.*
+- *In concise points, Explanation of how public opinion might shift based on the news.*
 
   
 
 #### Market Trends
 
-- *Analysis of how market trends might change as a result of the news.*
+- *In concise points, Analysis of how market trends might change as a result of the news.*
 
   
 

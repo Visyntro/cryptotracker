@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 import os
 
-def fetch_historical_data(exchange, symbol, timeframe='1d', limit=7):
+def fetch_historical_data(exchange, symbol, timeframe='1d', limit=60):
     try:
         ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
         df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])

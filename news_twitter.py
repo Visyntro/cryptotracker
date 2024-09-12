@@ -82,8 +82,9 @@ Running Cryptobert on these datasets
 import pandas as pd
 import dotenv 
 import os
-dotenv.load_dotenv()
-eventkey = os.getenv('eventkey')
+from dotenv import load_dotenv
+load_dotenv()
+eventkey = os.getenv('eventregistry')
 
 from eventregistry import *
 # since we want results from last month, just prevent use of archive - in this way we don't need to set any date constraints
@@ -154,7 +155,7 @@ query = {
           ]
         },
     "$filter": {
-      "forceMaxDataTimeWindow": "31"
+      "forceMaxDataTimeWindow": "120"
     }
     
   }
@@ -163,7 +164,7 @@ q = QueryArticlesIter.initWithComplexQuery(query)
 articles = []
 
 # change maxItems to get the number of results that you want
-for article in q.execQuery(er, maxItems=10):
+for article in q.execQuery(er, maxItems=150):
     articles.append({
         "title": article.get("title"),
         "url": article.get("url"),
