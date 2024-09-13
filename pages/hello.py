@@ -71,7 +71,7 @@ news_df['date'] = pd.to_datetime(news_df['date'])
 news_df = news_df[(news_df['date'] >= maxvolume_date - pd.Timedelta(days=10)) & (news_df['date'] <= maxvolume_date + pd.Timedelta(days=10))]
 news_df = news_df.sort_values(by='date', ascending=False)
 
-print(news_df)
+
 
 st.subheader(f"Displaying {len(news_df)} news items")
 for index, row in news_df.iterrows():
