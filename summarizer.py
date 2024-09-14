@@ -1,6 +1,7 @@
 from groq import Groq
+import streamlit as st
 def summarize_news_article(news_article:str)->str:
-    client = Groq()
+    client = Groq(st.secrets["groq_api_key"])
     completion = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
