@@ -4,7 +4,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+#os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 """This one is using the groq libary directly"""
 from dotenv import load_dotenv
