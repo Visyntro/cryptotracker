@@ -4,7 +4,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+#os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 """This one is using the groq libary directly"""
 from dotenv import load_dotenv
@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import json
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+#GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 from langchain_core.pydantic_v1 import BaseModel, Field
 from typing_extensions import Annotated, TypedDict
 from langchain.prompts import PromptTemplate
@@ -154,7 +154,7 @@ def get_sentiment(news_articles,sentiment,categories):
   
   
   bruh=""
-  if float(sentiment)>0:
+  if float(sentiment)>0.5:
     bruh="Positive"
   else:
     bruh="Negative"
@@ -239,7 +239,7 @@ Please format the output in **Markdown** as follows:
   
  
   
-  llm = ChatGroq(groq_api_key = GROQ_API_KEY , model="llama3-groq-70b-8192-tool-use-preview")
+  llm = ChatGroq(groq_api_key = st.secrets["groq_api_key"] , model="llama3-groq-70b-8192-tool-use-preview")
   chain = prompt | llm | parser 
   result = chain.invoke({"news_articles":news_articles,"sentiment":sentiment,"bruh":bruh,"cryptolist":filtered_df.to_markdown()}) 
 
