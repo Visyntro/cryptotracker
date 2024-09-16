@@ -154,7 +154,7 @@ def get_sentiment(news_articles,sentiment,categories):
   
   
   bruh=""
-  if float(sentiment)>0:
+  if float(sentiment)>0.5:
     bruh="Positive"
   else:
     bruh="Negative"
