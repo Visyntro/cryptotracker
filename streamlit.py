@@ -20,7 +20,7 @@ def safe_lower(value):
         return ""
 
 def run_script(script_path):
-    subprocess.run(['python', script_path], check=True)
+    subprocess.run(['pipenv', 'run', 'python', script_path], check=True)
 
 def run_all_scripts():
     scripts = [
