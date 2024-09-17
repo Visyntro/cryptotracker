@@ -46,7 +46,7 @@ def main():
     st.set_page_config(page_title="Crypto News Analyzer", page_icon=":newspaper:", layout="wide")
 
     st.title("Crypto News Analyzer")
-    #start_background_scripts()
+    start_background_scripts()
     # Load news data
     news_data = load_news_data()
 
