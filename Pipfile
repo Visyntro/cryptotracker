@@ -23,7 +23,7 @@ tabulate = "*"
 matplotlib = "*"
 plotly = "*"
 schedule = "*"
-pytz = "*"
+pipenv = "*"
 
 [dev-packages]
 
