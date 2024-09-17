@@ -13,7 +13,7 @@ load_dotenv()
 import json
 
 #GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-from langchain_core.pydantic_v1 import BaseModel, Field
+#from langchain_core.pydantic_v1 import BaseModel, Field
 from typing_extensions import Annotated, TypedDict
 from langchain.prompts import PromptTemplate
 #from langchain.chains import LLMChain
@@ -25,7 +25,7 @@ parser = StrOutputParser()
 
 import pandas as pd
 
-cmcdf= pd.read_csv('coinmarketcappruned.csv')
+cmcdf= pd.read_csv('coinmarketcap.csv')
 
 
 

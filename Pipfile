@@ -22,6 +22,9 @@ python-dotenv = "*"
 tabulate = "*"
 matplotlib = "*"
 plotly = "*"
+winloop = "*"
+schedule = "*"
+pytz = "*"
 
 [dev-packages]
 

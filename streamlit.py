@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 from cryptosentiment import crypto_categorizer, get_sentiment
 from summarizer import summarize_news_article
+import streamlit as st
+import threading
+import subprocess
 
 # Load the news CSV file
 @st.cache_data
@@ -14,6 +17,29 @@ def safe_lower(value):
         return str(value).lower()
     except:
         return ""
+
+def run_script(script_path):
+    subprocess.run(['python', script_path], check=True)
+
+def run_all_scripts():
+    scripts = [
+        'tracker.py',
+        'coinmarketcap.py',
+        'news_twitter.py'
+    ]
+    
+    for script in scripts:
+        try:
+            run_script(script)
+        except subprocess.CalledProcessError as e:
+            print(f"Error running {script}: {e}")
+
+@st.cache_resource
+def start_background_scripts():
+    thread = threading.Thread(target=run_all_scripts)
+    thread.daemon = True
+    thread.start()
+    return thread
 
 def main():
     st.set_page_config(page_title="Crypto News Analyzer", page_icon=":newspaper:", layout="wide")
