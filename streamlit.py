@@ -5,7 +5,8 @@ from summarizer import summarize_news_article
 import streamlit as st
 import threading
 import subprocess
-
+import ccxt
+import eventregistry
 # Load the news CSV file
 @st.cache_data
 def load_news_data():
@@ -19,7 +20,7 @@ def safe_lower(value):
         return ""
 
 def run_script(script_path):
-    subprocess.run(['python', script_path], check=True)
+    subprocess.run(['pipenv', 'run', 'python', script_path], check=True)
 
 def run_all_scripts():
     scripts = [
@@ -45,7 +46,7 @@ def main():
     st.set_page_config(page_title="Crypto News Analyzer", page_icon=":newspaper:", layout="wide")
 
     st.title("Crypto News Analyzer")
-
+    start_background_scripts()
     # Load news data
     news_data = load_news_data()
 
