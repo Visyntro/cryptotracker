@@ -36,8 +36,13 @@ def combinedscraperfunc():
         # Add a delay to avoid hitting rate limits
         time.sleep(1)
 
-    fetch_and_save_cryptocurrency_data()
-    newsscrape()
+    bruh = fetch_and_save_cryptocurrency_data()
+    if bruh == "Error fetching data: {e}":
+        print("Error fetching data: {e}")
+    
+    bruh2= newsscrape()
+    if not bruh2:
+        print("Error fetching news:")
 
     print("All data saved successfully.")
 

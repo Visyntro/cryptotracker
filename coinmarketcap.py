@@ -69,7 +69,7 @@ def fetch_and_save_cryptocurrency_data():
             writer.writeheader()
             writer.writerows(formatted_data)
 
-        return "Data fetched and CSV file created successfully!"
+        return formatted_data
 
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         return f"Error fetching data: {e}"
