@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CMC_KEY = os.getenv("COINMARKETCAP_API_KEY")
+CMC_KEY = st.secrets["COINMARKETCAP_API_KEY"]
 
 def fetch_and_save_cryptocurrency_data():
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
