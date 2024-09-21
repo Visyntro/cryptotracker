@@ -15,7 +15,6 @@ def safe_lower(value):
         return ""
 
 
-
 def main():
     st.set_page_config(page_title="Crypto News Analyzer", page_icon=":newspaper:", layout="wide")
 

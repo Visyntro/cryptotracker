@@ -1,5 +1,6 @@
 from groq import Groq
 import streamlit as st
+
 def summarize_news_article(news_article:str)->str:
     client = Groq(api_key=st.secrets["groq_api_key"])
     completion = client.chat.completions.create(
