@@ -2,59 +2,36 @@ import streamlit as st
 import pandas as pd
 from cryptosentiment import crypto_categorizer, get_sentiment
 from summarizer import summarize_news_article
-import streamlit as st
-import threading
-import subprocess
-import ccxt
-import eventregistry
-# Load the news CSV file
+from combiner import combinedscraperfunc
+
 @st.cache_data
 def load_news_data():
     return pd.read_csv("cryptocurrency_newsapi.csv")
 
 def safe_lower(value):
-    """Convert value to lowercase string if possible, otherwise return empty string."""
     try:
         return str(value).lower()
     except:
         return ""
 
-def run_script(script_path):
-    subprocess.run(['pipenv', 'run', 'python', script_path], check=True)
 
-def run_all_scripts():
-    scripts = [
-        'tracker.py',
-        'coinmarketcap.py',
-        'news_twitter.py'
-    ]
-    
-    for script in scripts:
-        try:
-            run_script(script)
-        except subprocess.CalledProcessError as e:
-            print(f"Error running {script}: {e}")
-
-@st.cache_resource
-def start_background_scripts():
-    thread = threading.Thread(target=run_all_scripts)
-    thread.daemon = True
-    thread.start()
-    return thread
 
 def main():
     st.set_page_config(page_title="Crypto News Analyzer", page_icon=":newspaper:", layout="wide")
 
     st.title("Crypto News Analyzer")
-    start_background_scripts()
-    # Load news data
+
+    # Button in the sidebar to trigger the scraper function
+    if st.sidebar.button("Fetch Latest News"):
+        with st.spinner('Fetching latest news...'):
+            combinedscraperfunc()  # Run the scraping function
+            st.sidebar.success("News data updated!")
+
     news_data = load_news_data()
 
-    # Sidebar for filters
     st.sidebar.title("Filters")
     search_term = st.sidebar.text_input("Search news")
     
-    # Main content area
     for index, row in news_data.iterrows():
         title = safe_lower(row.get('title', ''))
         description = safe_lower(row.get('description', ''))
@@ -68,17 +45,13 @@ def main():
                         st.write(f"**Published:** {row.get('date', 'Unknown')}")
                         st.write(f"**Link:** {row.get('url', 'No description available')}")
                         
-                        # Sentiment analysis
                         sentiment = str(row.get('sentiment', ''))
-                        content=str(row.get('body', ''))
+                        content = str(row.get('body', ''))
                         if len(content) > 20000:
                             content = content[:20000] + "..."
                         summarized_content = summarize_news_article(content)
                         categories = crypto_categorizer(content)
-                        get_sentiment(summarized_content, sentiment,categories)
-                        
-                        # Cryptocurrency categorization
-                        
+                        get_sentiment(summarized_content, sentiment, categories)
                         
                         st.write("**Cryptocurrencies mentioned:**")
                         for category in categories:

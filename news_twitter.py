@@ -87,102 +87,104 @@ load_dotenv()
 eventkey = os.getenv('eventregistry')
 
 from eventregistry import *
-# since we want results from last month, just prevent use of archive - in this way we don't need to set any date constraints
-er = EventRegistry(apiKey = eventkey , allowUseOfArchive = False)
+
+def newsscrape():
+  er = EventRegistry(apiKey = eventkey , allowUseOfArchive = False)
 
 
-query = {
-    "$query": {
+  query = {
+      "$query": {
+            "$or": [
+                          {"keyword": "Memecoins", "keywordLoc": "body"},
+                          {"keyword": "Cryptocurrency", "keywordLoc": "body"},
+                          {"keyword": "Bitcoin", "keywordLoc": "body"},
+                          {"keyword": "Ethereum", "keywordLoc": "body"},
+                          {"keyword": "Cryptocurrency_wallet", "keywordLoc": "body"},
+                          {"keyword": "Blockchain", "keywordLoc": "body"},
+                          {"keyword": "Altcoins", "keywordLoc": "body"},
+                          {"keyword": "Web3", "keywordLoc": "body"},
+                          {"keyword": "Metaverse", "keywordLoc": "body"},
+                          {"keyword": "DAO", "keywordLoc": "body"},
+                          {"keyword": "Cryptocurrency exchange", "keywordLoc": "body"},
+                      
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Bitcoin"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Ethereum"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_wallet"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Blockchain"
+              },
+              {
+                "conceptUri": "http://pt.wikipedia.org/wiki/Altcoins"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Web3"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Metaverse"
+              },
+              {
+                "conceptUri": "http://es.wikipedia.org/wiki/DAO"
+              },
+              {
+                "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_exchange"
+              },
+                    {
           "$or": [
-                        {"keyword": "Memecoins", "keywordLoc": "body"},
-                        {"keyword": "Cryptocurrency", "keywordLoc": "body"},
-                        {"keyword": "Bitcoin", "keywordLoc": "body"},
-                        {"keyword": "Ethereum", "keywordLoc": "body"},
-                        {"keyword": "Cryptocurrency_wallet", "keywordLoc": "body"},
-                        {"keyword": "Blockchain", "keywordLoc": "body"},
-                        {"keyword": "Altcoins", "keywordLoc": "body"},
-                        {"keyword": "Web3", "keywordLoc": "body"},
-                        {"keyword": "Metaverse", "keywordLoc": "body"},
-                        {"keyword": "DAO", "keywordLoc": "body"},
-                        {"keyword": "Cryptocurrency exchange", "keywordLoc": "body"},
-                    
             {
-              "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency"
+              "locationUri": "http://en.wikipedia.org/wiki/India"
             },
             {
-              "conceptUri": "http://en.wikipedia.org/wiki/Bitcoin"
+              "locationUri": "http://en.wikipedia.org/wiki/United_States"
             },
             {
-              "conceptUri": "http://en.wikipedia.org/wiki/Ethereum"
-            },
-            {
-              "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_wallet"
-            },
-            {
-              "conceptUri": "http://en.wikipedia.org/wiki/Blockchain"
-            },
-            {
-              "conceptUri": "http://pt.wikipedia.org/wiki/Altcoins"
-            },
-            {
-              "conceptUri": "http://en.wikipedia.org/wiki/Web3"
-            },
-            {
-              "conceptUri": "http://en.wikipedia.org/wiki/Metaverse"
-            },
-            {
-              "conceptUri": "http://es.wikipedia.org/wiki/DAO"
-            },
-            {
-              "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_exchange"
-            },
-                  {
-        "$or": [
-          {
-            "locationUri": "http://en.wikipedia.org/wiki/India"
-          },
-          {
-            "locationUri": "http://en.wikipedia.org/wiki/United_States"
-          },
-          {
-            "locationUri": "http://en.wikipedia.org/wiki/Europe"
-          }
-        ]
-      },
-            {
-              "lang": "eng"
+              "locationUri": "http://en.wikipedia.org/wiki/Europe"
             }
           ]
         },
-    "$filter": {
-      "forceMaxDataTimeWindow": "120"
+              {
+                "lang": "eng"
+              }
+            ]
+          },
+      "$filter": {
+        "forceMaxDataTimeWindow": "120"
+      }
+      
     }
-    
-  }
-q = QueryArticlesIter.initWithComplexQuery(query)
-# change maxItems to get the number of results that you want
-articles = []
+  q = QueryArticlesIter.initWithComplexQuery(query)
+  # change maxItems to get the number of results that you want
+  articles = []
 
-# change maxItems to get the number of results that you want
-for article in q.execQuery(er, maxItems=150):
-    articles.append({
-        "title": article.get("title"),
-        "url": article.get("url"),
-        "date": article.get("date"),
-        "source": article.get("source", {}).get("title"),
-        "body": article.get("body"),
-        "image": article.get("image", {}),
-        "sentiment": article.get("sentiment", {})
-    })
+  # change maxItems to get the number of results that you want
+  for article in q.execQuery(er, maxItems=150):
+      articles.append({
+          "title": article.get("title"),
+          "url": article.get("url"),
+          "date": article.get("date"),
+          "source": article.get("source", {}).get("title"),
+          "body": article.get("body"),
+          "image": article.get("image", {}),
+          "sentiment": article.get("sentiment", {})
+      })
 
-# Convert the list of dictionaries into a DataFrame
-df_news = pd.DataFrame(articles)
+  # Convert the list of dictionaries into a DataFrame
+  df_news = pd.DataFrame(articles)
+  df_news=df_news.dropna(subset=['sentiment'])
+  df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
+  # Display the DataFrame
+  return df_news
+  
 
-# Display the DataFrame
-print(df_news)
-df_news=df_news.dropna(subset=['sentiment'])
-
-df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
+  
 
 
 
