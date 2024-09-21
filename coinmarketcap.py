@@ -3,7 +3,7 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import csv
 import os
 from dotenv import load_dotenv
-
+import streamlit as st
 load_dotenv()
 
 CMC_KEY = st.secrets["COINMARKETCAP_API_KEY"]
