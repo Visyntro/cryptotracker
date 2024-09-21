@@ -84,7 +84,7 @@ import dotenv
 import os
 from dotenv import load_dotenv
 load_dotenv()
-eventkey = os.getenv('eventregistry')
+eventkey = st.secrets['eventregistry']
 
 from eventregistry import *
 
