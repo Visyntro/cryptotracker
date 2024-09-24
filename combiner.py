@@ -5,7 +5,7 @@ from coinmarketcap import fetch_and_save_cryptocurrency_data
 from news_twitter import newsscrape
 from tracker import fetch_historical_data
 def combinedscraperfunc():
-    exchange = ccxt.binance()
+    exchange = ccxt.kucoin()
 
     # List of cryptocurrencies
     cryptocurrencies = ['BTC', 'ETH', 'USDT', 'BNB', 'SOL', 'USDC', 'XRP', 'DOGE', 'TRX', 'TON', 'ADA', 'AVAX', 'SHIB', 'LINK', 'BCH', 'DOT', 'LEO', 'DAI', 'LTC', 'NEAR', 'UNI', 'KAS', 'ICP', 'XMR', 'PEPE', 'APT', 'FET', 'XLM', 'ETC', 'FDUSD', 'OKB', 'SUI', 'STX', 'CRO', 'AAVE', 'FIL', 'RENDER', 'IMX', 'MNT', 'TAO', 'MATIC', 'HBAR', 'ARB', 'VET', 'INJ', 'OP', 'ATOM', 'WIF', 'MKR', 'AR']
@@ -41,7 +41,7 @@ def combinedscraperfunc():
         print("Error fetching data: {e}")
     
     bruh2= newsscrape()
-    if not bruh2:
+    if bruh2.empty:
         print("Error fetching news:")
 
     print("All data saved successfully.")
