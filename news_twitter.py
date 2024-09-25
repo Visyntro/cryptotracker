@@ -100,13 +100,14 @@ def newsscrape():
                           {"keyword": "Cryptocurrency", "keywordLoc": "body"},
                           {"keyword": "Bitcoin", "keywordLoc": "body"},
                           {"keyword": "Ethereum", "keywordLoc": "body"},
-                          {"keyword": "Cryptocurrency_wallet", "keywordLoc": "body"},
+                          {"keyword": "Cryptocurrency wallet", "keywordLoc": "body"},
                           {"keyword": "Blockchain", "keywordLoc": "body"},
                           {"keyword": "Altcoins", "keywordLoc": "body"},
-                          {"keyword": "Web3", "keywordLoc": "body"},
-                          {"keyword": "Metaverse", "keywordLoc": "body"},
-                          {"keyword": "DAO", "keywordLoc": "body"},
-                          {"keyword": "Cryptocurrency exchange", "keywordLoc": "body"},
+                          {"keyword": "Cryptocurrency exchange", "keywordLoc": "body"},{"keyword": "Bitcoin", "keywordLoc": "body"},
+            {"keyword": "Ethereum", "keywordLoc": "body"},
+            {"keyword": "Tether USDt", "keywordLoc": "body"},
+            {"keyword": "BNB", "keywordLoc": "body"},
+                          
                       
               {
                 "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency"
@@ -125,15 +126,9 @@ def newsscrape():
               },
               {
                 "conceptUri": "http://pt.wikipedia.org/wiki/Altcoins"
-              },
-              {
-                "conceptUri": "http://en.wikipedia.org/wiki/Web3"
-              },
+              },        
               {
                 "conceptUri": "http://en.wikipedia.org/wiki/Metaverse"
-              },
-              {
-                "conceptUri": "http://es.wikipedia.org/wiki/DAO"
               },
               {
                 "conceptUri": "http://en.wikipedia.org/wiki/Cryptocurrency_exchange"
@@ -159,7 +154,7 @@ def newsscrape():
       "$filter": {
         "forceMaxDataTimeWindow": "120"
       }
-      
+      ,"sortBy": "date"
     }
   q = QueryArticlesIter.initWithComplexQuery(query)
   # change maxItems to get the number of results that you want
@@ -179,7 +174,16 @@ def newsscrape():
 
   # Convert the list of dictionaries into a DataFrame
   df_news = pd.DataFrame(articles)
-  df_news=df_news.dropna(subset=['sentiment'])
+  df_news = df_news.dropna(subset=['sentiment'])
+
+# Remove duplicates based on the 'title' column
+  df_news = df_news.drop_duplicates(subset=['title'], keep='first')
+
+# Convert 'date' column to datetime for proper sorting
+  df_news['date'] = pd.to_datetime(df_news['date'], errors='coerce')
+
+# Sort the DataFrame by the 'date' column in descending order (latest first)
+  df_news = df_news.sort_values(by='date', ascending=False)
   df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
   # Display the DataFrame
   return df_news
