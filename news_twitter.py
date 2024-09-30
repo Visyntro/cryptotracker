@@ -184,7 +184,7 @@ def newsscrape():
 
 # Sort the DataFrame by the 'date' column in descending order (latest first)
   df_news = df_news.sort_values(by='date', ascending=False)
-  df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
+  #df_news.to_csv('cryptocurrency_newsapi.csv', index=False)
   # Display the DataFrame
   return df_news
   
