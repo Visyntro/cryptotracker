@@ -5,6 +5,7 @@ import pandas as pd
 import os
 from summarizer import summarize_news_article
 
+st.set_page_config(page_title="Your Desired Page Title", page_icon=":icon_emoji:")
 # Define the directory where the OHLCV data is stored
 data_dir = 'crypto_data/'
 

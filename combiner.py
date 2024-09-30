@@ -4,6 +4,7 @@ import time
 from coinmarketcap import fetch_and_save_cryptocurrency_data
 from news_twitter import newsscrape
 from tracker import fetch_historical_data
+import pandas as pd
 def combinedscraperfunc():
     exchange = ccxt.kucoin()
 
@@ -37,12 +38,20 @@ def combinedscraperfunc():
         time.sleep(1)
 
     bruh = fetch_and_save_cryptocurrency_data()
+
     if bruh == "Error fetching data: {e}":
         print("Error fetching data: {e}")
-    
+
     bruh2= newsscrape()
     if bruh2.empty:
         print("Error fetching news:")
+    else:
+        print("News data fetched successfully.")
+        os.remove("cryptocurrency_newsapi.csv")
+
+        #bruhprev.drop(axis=0, inplace=True
+        #add newly scraped dataframe to the previous dataframe
+        bruh2.to_csv("cryptocurrency_newsapi.csv", index=False)
 
     print("All data saved successfully.")
 
