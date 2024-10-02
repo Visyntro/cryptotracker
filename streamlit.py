@@ -2,24 +2,13 @@ import streamlit as st
 import pandas as pd
 from cryptosentiment import crypto_categorizer, get_sentiment
 from summarizer import summarize_news_article
-import hashlib
 from combiner import combinedscraperfunc
-
-def get_file_hash(filename):
-    with open(filename, "rb") as f:
-        bytes = f.read()
-        return hashlib.md5(bytes).hexdigest()
-
-@st.cache_data
-def load_news_data(_hash):
-    return pd.read_csv("cryptocurrency_newsapi.csv")
 
 def safe_lower(value):
     try:
         return str(value).lower()
     except:
         return ""
-
 
 def main():
     st.set_page_config(page_title="Crypto News Analyzer", page_icon=":newspaper:", layout="wide")
@@ -32,7 +21,8 @@ def main():
             combinedscraperfunc()  # Run the scraping function
             st.sidebar.success("News data updated!")
 
-    news_data = load_news_data(get_file_hash)
+    # Read the CSV file directly
+    news_data = pd.read_csv("cryptocurrency_newsapi.csv")
 
     st.sidebar.title("Filters")
     search_term = st.sidebar.text_input("Search news")
