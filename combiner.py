@@ -52,6 +52,7 @@ def combinedscraperfunc():
         #bruhprev.drop(axis=0, inplace=True
         #add newly scraped dataframe to the previous dataframe
         bruh2.to_csv("cryptocurrency_newsapi.csv", index=False)
+        print(bruh2.head())
 
     print("All data saved successfully.")
 
